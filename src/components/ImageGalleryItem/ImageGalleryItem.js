@@ -1,5 +1,5 @@
 import Modal from 'react-modal';
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
 import {
   ImageGalleryItemImage,
@@ -9,57 +9,31 @@ import {
 
 Modal.setAppElement('#root');
 
-// export const GalleryItemImage = ({ item, modal, openModal, closeModal }) => {
-//   const { webformatURL, tags, largeImageURL,} = item;
-//   return (
-//     <div>
-//       <ImageItemStyled key={id}>
-//         <ImageGalleryItemImage
-//           src={webformatURL}
-//           alt={tags}
-//           load="lazy"
-//           onClick={openModal}
-//         />
-//         <Modal
-//           isOpen={modal}
-//           onRequestClose={closeModal}
-//           style={customStyles}
-//           contentLabel="Example Modal"
-//         >
-//           <img src={largeImageURL} alt={tags} />
-//         </Modal>
-//       </ImageItemStyled>
-//     </div>
-//   );
-// };
+export const GalleryItemImage = ({
+  item: { webformatURL, tags, largeImageURL },
+}) => {
+  // console.log(webformatURL);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-export class GalleryItemImage extends Component {
-  state = {
-    isModalOpen: false,
-  };
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
-  openModal = () => this.setState({ isModalOpen: true });
-  closeModal = () => this.setState({ isModalOpen: false });
-
-  render() {
-    const { webformatURL, tags, largeImageURL } = this.props.item;
-    return (
-      <ImageItemStyled>
-        <ImageGalleryItemImage
-          src={webformatURL}
-          alt={tags}
-          load="lazy"
-          onClick={this.openModal}
-        />
-        <Modal
-          isOpen={this.state.isModalOpen}
-          onRequestClose={this.closeModal}
-          style={customStyles}
-          contentLabel="Example Modal"
-        >
-          <img src={largeImageURL} alt={tags} />
-        </Modal>
-      </ImageItemStyled>
-    );
-  }
-}
+  return (
+    <ImageItemStyled>
+      <ImageGalleryItemImage
+        src={webformatURL}
+        alt={tags}
+        load="lazy"
+        onClick={openModal()}
+      />
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal()}
+        style={customStyles}
+        contentLabel="Example Modal"
+      >
+        <img src={largeImageURL} alt={tags} />
+      </Modal>
+    </ImageItemStyled>
+  );
+};

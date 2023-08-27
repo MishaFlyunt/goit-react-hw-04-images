@@ -2,6 +2,7 @@ import { GalleryItemImage } from '../ImageGalleryItem/ImageGalleryItem';
 import { ImageListStyled } from './ImageGallery.styled';
 
 export const ImageGallery = ({ searchImage }) => {
+  console.log(searchImage);
   return (
     <div>
       <ImageListStyled>

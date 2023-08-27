@@ -1,5 +1,5 @@
 import { GlobalStyle, Container } from './GlobalStyle';
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
 import { Searchbar } from './Searchbar/Searchbar';
@@ -7,104 +7,83 @@ import { ImageGallery } from './ImageGallery/ImageGallery';
 import { fetchImages, perPage } from './Api';
 import { Button } from './Button/Button';
 import { Loader } from './Loader/Loader';
+import { useState } from 'react';
 
-export class App extends Component {
-  state = {
-    query: '',
-    images: [],
-    page: 1,
-    // isModalOpen: false,
-    loading: false,
+export const App = () => {
+  const [query, setQuery] = useState('');
+  const [images, setImages] = useState([]);
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+
+  const changeQuery = newQuery => {
+    setQuery(`${Date.now()}/${newQuery}`);
+    setImages([]);
+    setPage(1);
   };
 
-  //форма
-  changeQuery = newQuery => {
-    this.setState({
-      query: `${Date.now()}/${newQuery}`,
-      // query: newQuery,
-      images: [],
-      page: 1,
-    });
-  };
-
-  handleSubmit = evt => {
+  const handleSubmit = evt => {
     evt.preventDefault();
     if (evt.target.elements.query.value.trim() === '') {
       toast.error('Sorry, The search criteria are unknown');
       return;
     }
-    this.changeQuery(evt.target.elements.query.value);
+    changeQuery(evt.target.elements.query.value);
     evt.target.reset();
   };
-  /////
 
-  //http
-  componentDidUpdate = async (prevProps, prevState) => {
-    const prevStateQuery = prevState.query;
-    const prevStatePage = prevState.page;
-    const searchQuery = this.state.query;
-    const nextPage = this.state.page;
+  // useEffect(() => {
+  //   if (query === '') return;
+  //   if (setQuery !== query || setPage !== page) {
+  //     console.log(`HTTP запит за ${query}, і page=${page}`);
+  //     loadResult();
+  //   }
+  // }, [query, page]);
 
-    if (prevStateQuery !== searchQuery || prevStatePage !== nextPage) {
-      console.log(
-        `HTTP запит за ${this.state.query}, і page=${this.state.page}`
-      );
-      this.loadResult();
+  useEffect(() => {
+    if (query === '') return;
+    if (setQuery !== query || setPage !== page) {
+      console.log(`HTTP запит за ${query}, і page=${page}`);
     }
-  };
-
-  loadResult = async () => {
-    const searchQuery = this.state.query;
-    const nextPage = this.state.page;
-
-    try {
-      this.setState({ loading: true });
-      const img = await fetchImages(searchQuery, nextPage);
-      if (img.length) {
-        this.setState(prevState => ({
-          images: this.state.page > 1 ? [...prevState.images, ...img] : img,
-        }));
-        this.setState({ loading: false });
-      } else {
-        toast.error('Sorry, Nothing was found for these criteria');
-        this.setState({ loading: false });
+    async function loadResult() {
+      try {
+        setLoading(true);
+        const img = await fetchImages(query, page);
+        if (img.length) {
+          setImages(prevState => (page > 1 ? [...prevState, ...img] : img));
+          setLoading(false);
+        } else {
+          toast.error('Sorry, Nothing was found for these criteria');
+          setLoading(false);
+        }
+      } catch (error) {
+        setLoading(false);
       }
-    } catch (error) {
-      this.setState({ loading: false });
     }
+    loadResult();
+  }, [query, page]);
+
+  const handleLoadMore = () => {
+    // setPage(prevState => ({ page: prevState.page + 1 }));
+    // setPage(prevState => prevState + 1);
+    setPage(page + 1);
   };
-
-  //кнопка
-  handleLoadMore = () => {
-    this.setState(prevState => ({ page: prevState.page + 1 }));
-  };
-
-  //modal
-  // openModal = () => this.setState({ isModalOpen: true });
-  // closeModal = () => this.setState({ isModalOpen: false });
-
-  render() {
-    const { query, images, loading, page } = this.state;
-    console.log(query);
-    console.log(images);
-    return (
-      <Container>
-        <Searchbar submit={this.handleSubmit} />
-        {images.length > 0 && (
-          <ImageGallery
-            searchImage={images}
-            // modal={isModalOpen}
-            // openModal={this.openModal}
-            // closeModal={this.closeModal}
-          />
-        )}
-        {images.length / perPage >= page && !loading && (
-          <Button loadMore={this.handleLoadMore} />
-        )}
-        {loading && <Loader />}
-        <Toaster position="top-right" reverseOrder={false} />
-        <GlobalStyle />
-      </Container>
-    );
-  }
-}
+  return (
+    <Container>
+      <Searchbar submit={handleSubmit} />
+      {images.length > 0 && (
+        <ImageGallery
+          searchImage={images}
+          // modal={isModalOpen}
+          // openModal={this.openModal}
+          // closeModal={this.closeModal}
+        />
+      )}
+      {images.length / perPage >= page && !loading && (
+        <Button loadMore={handleLoadMore} />
+      )}
+      {loading && <Loader />}
+      <Toaster position="top-right" reverseOrder={false} />
+      <GlobalStyle />
+    </Container>
+  );
+};
