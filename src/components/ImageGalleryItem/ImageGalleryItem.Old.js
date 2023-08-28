@@ -9,30 +9,6 @@ import {
 
 Modal.setAppElement('#root');
 
-// export const GalleryItemImage = ({ item, modal, openModal, closeModal }) => {
-//   const { webformatURL, tags, largeImageURL,} = item;
-//   return (
-//     <div>
-//       <ImageItemStyled key={id}>
-//         <ImageGalleryItemImage
-//           src={webformatURL}
-//           alt={tags}
-//           load="lazy"
-//           onClick={openModal}
-//         />
-//         <Modal
-//           isOpen={modal}
-//           onRequestClose={closeModal}
-//           style={customStyles}
-//           contentLabel="Example Modal"
-//         >
-//           <img src={largeImageURL} alt={tags} />
-//         </Modal>
-//       </ImageItemStyled>
-//     </div>
-//   );
-// };
-
 export class GalleryItemImage extends Component {
   state = {
     isModalOpen: false,

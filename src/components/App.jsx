@@ -31,23 +31,19 @@ export const App = () => {
     evt.target.reset();
   };
 
-  // useEffect(() => {
-  //   if (query === '') return;
-  //   if (setQuery !== query || setPage !== page) {
-  //     console.log(`HTTP запит за ${query}, і page=${page}`);
-  //     loadResult();
-  //   }
-  // }, [query, page]);
-
   useEffect(() => {
     if (query === '') return;
-    if (setQuery !== query || setPage !== page) {
-      console.log(`HTTP запит за ${query}, і page=${page}`);
-    }
+    // if (setQuery !== query || setPage !== page) {
+    //   console.log(`HTTP запит за ${query}, і page=${page}`);
+    // }
     async function loadResult() {
+      // if (query === '') return;
+      // if (setQuery !== query || setPage !== page) {
+      //   console.log(`HTTP запит за ${query}, і page=${page}`);
+      // }
       try {
         setLoading(true);
-        const img = await fetchImages(query, page);
+        const img = await fetchImages(query, page, perPage);
         if (img.length) {
           setImages(prevState => (page > 1 ? [...prevState, ...img] : img));
           setLoading(false);
