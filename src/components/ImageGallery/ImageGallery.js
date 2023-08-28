@@ -10,12 +10,11 @@ export const ImageGallery = ({ searchImage }) => {
           <GalleryItemImage
             key={item.id}
             item={item}
-            // modal={modal}
-            // openModal={openModal}
-            // closeModal={closeModal}
           />
         ))}
       </ImageListStyled>
     </div>
   );
 };
+
+

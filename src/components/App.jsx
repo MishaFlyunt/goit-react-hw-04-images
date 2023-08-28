@@ -33,17 +33,13 @@ export const App = () => {
 
   useEffect(() => {
     if (query === '') return;
-    // if (setQuery !== query || setPage !== page) {
-    //   console.log(`HTTP запит за ${query}, і page=${page}`);
-    // }
+    if (setQuery !== query || setPage !== page) {
+      console.log(`HTTP запит за ${query}, і page=${page}`);
+    }
     async function loadResult() {
-      // if (query === '') return;
-      // if (setQuery !== query || setPage !== page) {
-      //   console.log(`HTTP запит за ${query}, і page=${page}`);
-      // }
       try {
         setLoading(true);
-        const img = await fetchImages(query, page, perPage);
+        const img = await fetchImages(query, page);
         if (img.length) {
           setImages(prevState => (page > 1 ? [...prevState, ...img] : img));
           setLoading(false);
@@ -59,21 +55,13 @@ export const App = () => {
   }, [query, page]);
 
   const handleLoadMore = () => {
-    // setPage(prevState => ({ page: prevState.page + 1 }));
     // setPage(prevState => prevState + 1);
     setPage(page + 1);
   };
   return (
     <Container>
       <Searchbar submit={handleSubmit} />
-      {images.length > 0 && (
-        <ImageGallery
-          searchImage={images}
-          // modal={isModalOpen}
-          // openModal={this.openModal}
-          // closeModal={this.closeModal}
-        />
-      )}
+      {images.length > 0 && <ImageGallery searchImage={images} />}
       {images.length / perPage >= page && !loading && (
         <Button loadMore={handleLoadMore} />
       )}
