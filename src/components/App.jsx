@@ -66,6 +66,7 @@ export const App = () => {
         <Button loadMore={handleLoadMore} />
       )}
       {loading && <Loader />}
+      
       <Toaster position="top-right" reverseOrder={false} />
       <GlobalStyle />
     </Container>
