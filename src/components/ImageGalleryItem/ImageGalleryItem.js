@@ -1,5 +1,7 @@
 import Modal from 'react-modal';
-import React, { useState } from 'react';
+// import React, { useState } from 'react';
+import React from 'react';
+import { useToggle } from '../UseToggle/useToggle';
 
 import {
   ImageGalleryItemImage,
@@ -12,10 +14,11 @@ Modal.setAppElement('#root');
 export const GalleryItemImage = ({
   item: { webformatURL, tags, largeImageURL },
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const openModal = () => setIsModalOpen(true);
+  // const closeModal = () => setIsModalOpen(false);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const { isModalOpen, openModal, closeModal } = useToggle();
 
   return (
     <ImageItemStyled>
@@ -36,4 +39,3 @@ export const GalleryItemImage = ({
     </ImageItemStyled>
   );
 };
-
