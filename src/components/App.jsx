@@ -36,7 +36,7 @@ export const App = () => {
     if (setQuery !== query || setPage !== page) {
       console.log(`HTTP запит за ${query}, і page=${page}`);
     }
-    async function loadResult() {
+    const loadResult = async () => {
       try {
         setLoading(true);
         const img = await fetchImages(query, page);
@@ -48,9 +48,11 @@ export const App = () => {
           setLoading(false);
         }
       } catch (error) {
+        console.log(error);
+      } finally {
         setLoading(false);
       }
-    }
+    };
     loadResult();
   }, [query, page]);
 
@@ -66,7 +68,7 @@ export const App = () => {
         <Button loadMore={handleLoadMore} />
       )}
       {loading && <Loader />}
-      
+
       <Toaster position="top-right" reverseOrder={false} />
       <GlobalStyle />
     </Container>
