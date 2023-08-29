@@ -57,7 +57,6 @@ export const App = () => {
   }, [query, page]);
 
   const handleLoadMore = () => {
-    // setPage(prevState => prevState + 1);
     setPage(page + 1);
   };
   return (
